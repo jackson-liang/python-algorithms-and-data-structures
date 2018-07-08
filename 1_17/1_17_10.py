@@ -1,3 +1,6 @@
+# Exercise 10 from
+# https://interactivepython.org/runestone/static/pythonds/Introduction/ProgrammingExercises.html
+
 class LogicGate:
     def __init__(self,n):
         self.name = n
@@ -141,7 +144,7 @@ def main():
    g2 = AndGate("G2")
    g3 = OrGate("G3")
    g4 = NotGate("G4")
-   
+
    # Adding the new gates to the circuit
    g5 = NandGate("G5")
    g6 = XorGate("G6")
