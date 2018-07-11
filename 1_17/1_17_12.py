@@ -1,4 +1,4 @@
-# Exercise 11 from
+# Exercise 12 from
 # https://interactivepython.org/runestone/static/pythonds/Introduction/ProgrammingExercises.html
 
 class LogicGate:
@@ -19,6 +19,9 @@ class BinaryGate(LogicGate):
         LogicGate.__init__(self,n)
         self.pinA = None
         self.pinB = None
+
+    def setPinA(self, x):
+        self.pinA = x
 
     def getPinA(self):
         if self.pinA == None:
@@ -55,14 +58,6 @@ class AndGate(BinaryGate):
             return 0
 
 
-# My NandGate which inherits from AndGate
-class NandGate(AndGate):
-    def performGateLogic(self):
-        if AndGate.performGateLogic(self) == 1:
-            return 0
-        else:
-            return 1
-
 
 class OrGate(BinaryGate):
     def __init__(self,n):
@@ -77,14 +72,6 @@ class OrGate(BinaryGate):
             return 0
 
 
-# My NorGate which inherits from orGate
-class NorGate(OrGate):
-    def performGateLogic(self):
-        if OrGate.performGateLogic(self) == 1:
-            return 0
-        else:
-            return 1
-
 # My XorGate which inherits from orGate
 class XorGate(OrGate):
     def __init__(self,n):
@@ -93,34 +80,6 @@ class XorGate(OrGate):
         a = self.getPinA()
         b = self.getPinB()
         if a==b==0 or a==b==1:
-            return 0
-        else:
-            return 1
-
-class UnaryGate(LogicGate):
-    def __init__(self,n):
-        LogicGate.__init__(self,n)
-        self.pin = None
-
-    def getPin(self):
-        if self.pin == None:
-            return int(input("Enter Pin input for gate "+self.getName()+"-->"))
-        else:
-            return self.pin.getFrom().getOutput()
-
-    def setNextPin(self,source):
-        if self.pin == None:
-            self.pin = source
-        else:
-            print("Cannot Connect: NO EMPTY PINS on this gate")
-
-
-class NotGate(UnaryGate):
-    def __init__(self,n):
-        UnaryGate.__init__(self,n)
-
-    def performGateLogic(self):
-        if self.getPin():
             return 0
         else:
             return 1
@@ -140,11 +99,18 @@ class Connector:
 
 
 def main():
-    # Creating a Half Adder Circuit:
+    # Creating a Full Adder Circuit:
     g1 = XorGate("G1")
     g2 = AndGate("G2")
-    sum = g1.getOutput()
-    carry = g2.getOutput()
+    g3 = XorGate("G3")
+    g4 = AndGate("G4")
+    g5 = OrGate("G5")
+    c1 = Connector(g1, g3)
+    sum = g3.getOutput()
+    c2 = Connector(g1, g4)
+    c3 = Connector(g4, g5)
+    c4 = Connector(g2, g5)
+    carry = g5.getOutput()
     print(sum)
     print(carry)
 main()
