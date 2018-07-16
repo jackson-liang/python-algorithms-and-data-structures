@@ -14,6 +14,9 @@ class Card:
     def __str__(self):
         return str(Card.ranks[self.rank]) + " of " + str(Card.suits[self.suit])
 
+    def __eq__(self, other):
+        return self.suit == other.suit and self.rank == other.rank
+
     def __lt__(self, other):
         # Checking the suits first
         if self.suit < other.suit:
