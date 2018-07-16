@@ -20,17 +20,30 @@ class BinaryGate(LogicGate):
         self.pinA = None
         self.pinB = None
 
+    # This setPin method takes the pin value as an optional argument. If none is
+    # provided it will check if it gets the value as an output from another gate,
+    # and if it doesn't find one will prompt the Use for one
+    def setPinA(self, a=None):
+        if a==None:
+            try:
+                a = self.pinA.getFrom().getOutput()
+            except AttributeError:
+                a = int(input("Enter Pin A input for gate "+self.getName()+"-->"))
+        self.pinA = a
+
     def getPinA(self):
-        if self.pinA == None:
-            return int(input("Enter Pin A input for gate "+self.getName()+"-->"))
-        else:
-            return self.pinA.getFrom().getOutput()
+        return self.pinA
+
+    def setPinB(self, b=None):
+        if b==None:
+            try:
+                b = self.pinB.getFrom().getOutput()
+            except AttributeError:
+                b = int(input("Enter Pin B input for gate "+self.getName()+"-->"))
+        self.pinB = b
 
     def getPinB(self):
-        if self.pinB == None:
-            return int(input("Enter Pin B input for gate "+self.getName()+"-->"))
-        else:
-            return self.pinB.getFrom().getOutput()
+        return self.pinB
 
     def setNextPin(self,source):
         if self.pinA == None:
@@ -55,15 +68,6 @@ class AndGate(BinaryGate):
             return 0
 
 
-# My NandGate which inherits from AndGate
-class NandGate(AndGate):
-    def performGateLogic(self):
-        if AndGate.performGateLogic(self) == 1:
-            return 0
-        else:
-            return 1
-
-
 class OrGate(BinaryGate):
     def __init__(self,n):
         BinaryGate.__init__(self,n)
@@ -77,14 +81,6 @@ class OrGate(BinaryGate):
             return 0
 
 
-# My NorGate which inherits from orGate
-class NorGate(OrGate):
-    def performGateLogic(self):
-        if OrGate.performGateLogic(self) == 1:
-            return 0
-        else:
-            return 1
-
 # My XorGate which inherits from orGate
 class XorGate(OrGate):
     def __init__(self,n):
@@ -93,34 +89,6 @@ class XorGate(OrGate):
         a = self.getPinA()
         b = self.getPinB()
         if a==b==0 or a==b==1:
-            return 0
-        else:
-            return 1
-
-class UnaryGate(LogicGate):
-    def __init__(self,n):
-        LogicGate.__init__(self,n)
-        self.pin = None
-
-    def getPin(self):
-        if self.pin == None:
-            return int(input("Enter Pin input for gate "+self.getName()+"-->"))
-        else:
-            return self.pin.getFrom().getOutput()
-
-    def setNextPin(self,source):
-        if self.pin == None:
-            self.pin = source
-        else:
-            print("Cannot Connect: NO EMPTY PINS on this gate")
-
-
-class NotGate(UnaryGate):
-    def __init__(self,n):
-        UnaryGate.__init__(self,n)
-
-    def performGateLogic(self):
-        if self.getPin():
             return 0
         else:
             return 1
@@ -139,12 +107,17 @@ class Connector:
         return self.togate
 
 
-def main():
-    # Creating a Half Adder Circuit:
+def halfAdder(x, y):
+    ''' The Half Adder circuit takes 2 bits (0 or 1) as arguments and performs Gate Logic.
+    '''
     g1 = XorGate("G1")
+    g1.setPinA(x)
+    g1.setPinB(y)
     g2 = AndGate("G2")
+    g2.setPinA(x)
+    g2.setPinB(y)
     sum = g1.getOutput()
     carry = g2.getOutput()
-    print(sum)
-    print(carry)
-main()
+    return sum,carry
+
+print(halfAdder(1,1))
